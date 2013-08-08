@@ -1,0 +1,6 @@
+/home/speed/rubens/DFPTree/bin/init/CMakeFiles/init.dir
+/home/speed/rubens/DFPTree/bin/process/CMakeFiles/label.dir
+/home/speed/rubens/DFPTree/bin/merge/CMakeFiles/merge.dir
+/home/speed/rubens/DFPTree/bin/reduce/CMakeFiles/reduce.dir
+/home/speed/rubens/DFPTree/bin/sum/CMakeFiles/sum.dir
+/home/speed/rubens/DFPTree/bin/tree/CMakeFiles/tree.dir

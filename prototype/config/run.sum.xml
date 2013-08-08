@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE processing_module
+	SYSTEM "/home/speed/rubens/libwatershed/processing_module.dtd">
+<processing_module>
+	<global
+		name = "Sum"
+		library = "/home/speed/rubens/DFPTree/bin/sum/libsum.so"
+		arguments = ""
+		instances = "4">
+	</global>
+	<inputs>
+		<input
+			name = "TreeData"
+			policy = "labeled"
+			policy_function_file = "/home/speed/rubens/DFPTree/bin/process/liblabel.so"/>
+	</inputs>
+	<output name = "SumData" structure = "none"/>
+	<demands>
+		<demand name = "init"/>
+	</demands>
+</processing_module>

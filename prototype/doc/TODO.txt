@@ -1,0 +1,13 @@
+// TODO list
+
+1) redesign `Pack()` methods:
+
+	// Global packing
+	Pack(data...);
+
+	// Labeled packing
+	Pack[label](data...);
+
+2) redesign `class DataPacker`/`class DataSignaler`;
+
+3) BDD: allow node overlaping during computation and communication;

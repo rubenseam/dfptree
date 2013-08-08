@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE processing_module
+	SYSTEM "/home/speed/rubens/libwatershed/processing_module.dtd">
+<processing_module>
+	<global
+		name = "Reduce"
+		library = "/home/speed/rubens/DFPTree/bin/reduce/libreduce.so"
+		arguments = ""
+		instances = "<instances>">
+	</global>
+	<inputs>
+		<input
+			name = "MergeData" policy = "labeled"
+			policy_function_file = "/home/speed/rubens/DFPTree/bin/process/liblabel.so"/>
+	</inputs>
+	<demands>
+		<demand name = "reduce"/>
+	</demands>
+</processing_module>

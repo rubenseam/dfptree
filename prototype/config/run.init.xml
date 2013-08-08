@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE processing_module
+	SYSTEM "/home/speed/rubens/libwatershed/processing_module.dtd">
+<processing_module>
+	<global
+		name = "Init"
+		library = "/home/speed/rubens/DFPTree/bin/init/libinit.so"
+		arguments = "-support 1 -level 10
+			-indexed 1 -reduction_level 5
+			-inpath /scratch/rubens/tests/synthetic/
+			-outpath /scratch/rubens/output/itemset"
+		instances = "1">
+	</global>
+	<output name = "InitData" structure = "none"/>
+	<demands>
+		<demand name = "init"/>
+	</demands>
+</processing_module>

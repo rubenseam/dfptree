@@ -1,0 +1,89 @@
+#!/bin/bash
+
+
+# Loads up the application
+dataset="$1"; indexed="$2"; support="$3"; level="$4"
+reduction_level="$5"; num_threads="$6"; timeout="$7"
+num_tests="$8"; debug="$9"
+
+echo -e ">>> Parameters =\n{"
+echo "    'dataset' = ${dataset};"
+echo "    'indexed' = ${indexed};"
+echo "    'support' = ${support};"
+echo "    'level' = ${level};"
+echo "    'reduction_level' = ${reduction_level};"
+echo "    'num_threads' = ${num_threads};"
+echo "    'timeout' = ${timeout};"
+echo "    'num_tests' = ${num_tests};"
+echo "    'debug_timeout' = ${debug};"
+echo -en "}\n\n>>> run tests? [Y/n]: "
+read run
+if [[ -z "${run}" || ! "${run}" = [Yy] ]]; then exit 1; fi
+
+# Instantiating configuration files
+dir="${HOME}/DFPTree/config"; rm -rf "${dir}/run."*.xml
+find "${dir}" -name "*.xml" | xargs -n 1 -I {} \
+	bash -c "sed -e 's/<support>/${support}/' \
+		-e 's/<level>/${level}/' \
+		-e 's/<idx>/${indexed}/' \
+		-e 's/<reduction_level>/${reduction_level}/' \
+		-e 's/<dataset>/${dataset}/' \
+		-e 's/<instances>/${num_threads}/' \
+		{} > ${dir}/run.\$(basename {})"
+
+# Execution
+if [[ -n ${debug} ]]; then (( ++num_tests )); fi
+for i  in `seq -w 01 ${num_tests}`; do
+
+	if [[ -n ${debug} && $i -eq 1 ]]; then
+		echo -e "\n>>> Debugging (timeout: ${timeout} seconds):"
+	else
+		echo -e "\n>>> Test #${i} (timeout: ${timeout} seconds):"
+	fi
+	sleep 3
+
+	# Starting watershed
+	if [[ -z $(pgrep ws) ]]; then
+		ws start; sleep 3
+	else
+		echo ">>> Error: platform still in execution($(pgrep ws));"
+		echo -en "    kill lingering execution? [Y/n]: "
+		read sendkill
+		if [[ -n "${sendkill}" && "${sendkill}" = [Yy] ]]; then
+			kill -9 $(pgrep ws); ws start; sleep 3
+		else
+			exit 1
+		fi
+	fi
+
+	# Running
+	ws load "${dir}/run.reduce.xml"; sleep 1
+	ws load "${dir}/run.merge.xml"; sleep 1
+	ws load "${dir}/run.sum.xml"; sleep 1
+	ws load "${dir}/run.tree.xml"; sleep 1
+	ws load "${dir}/run.init.xml"; sleep 1
+
+	# Timeout
+	tmp_timeout=${timeout}
+	echo ">>> Timeout (${tmp_timeout} seconds):"
+	while (( ${tmp_timeout} > 0 )); do
+		trap 'break; echo -e "\rLeaving timeout...\n"' 2
+		echo -ne "\r    remaining: ${tmp_timeout} seconds..."
+		sleep 1; (( --tmp_timeout ))
+	done
+
+	# Termination
+	echo ">>> Finishing execution..."; sleep 1; ws stop &
+	sleep 3; kill -9 $(pgrep ws); sleep 5
+	if [[ -n ${debug} && $i -eq 1 ]]; then
+		echo ">>> Debug interval (${debug} seconds):"
+		while (( ${debug} > 0 )); do
+			trap 'break; echo -e "\r>>> Leaving interval...\n"' 2
+			echo -ne "\r    remaining: ${debug} seconds..."
+			sleep 1; (( --debug ))
+		done
+		echo -e "\nRestarting..."; sleep 2
+	fi
+	clear
+
+done

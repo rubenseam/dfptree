@@ -1,0 +1,1 @@
+mpic++  -fPIC -std=c++0x -O3 -fPIC   -shared -Wl,-soname,libsum.so -o libsum.so CMakeFiles/sum.dir/sum.cpp.o -L/home/speed/rubens/snappy-1.1.0/lib -L/home/speed/rubens/libwatershed/lib -lsnappy -lwatershed -Wl,-rpath,/home/speed/rubens/snappy-1.1.0/lib:/home/speed/rubens/libwatershed/lib 
